@@ -1,9 +1,9 @@
-h1, h2, h3{
-	padding: 50px;
+h1{
+	padding: 10px;
 	outline: 10px solid rgb(153, 38, 30);
-	color: rgb(21, 134, 21);
+	color: rgb(63, 72, 204);
 }
 
 p{
-	font-size: 10px;
+	font-size: 30px;
 }
