@@ -1,0 +1,9 @@
+h1{
+	padding: 50px;
+	outline: 10px solid rgb(153, 38, 30);
+	color: green;
+}
+
+p{
+	font-size: 10px;
+}
