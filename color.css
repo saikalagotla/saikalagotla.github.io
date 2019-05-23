@@ -1,7 +1,7 @@
-h1{
+h1, h2, h3{
 	padding: 50px;
 	outline: 10px solid rgb(153, 38, 30);
-	color: green;
+	color: rgb(21, 134, 21);
 }
 
 p{
