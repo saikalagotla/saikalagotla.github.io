@@ -4,6 +4,16 @@ h1{
 	color: rgb(63, 72, 204);
 }
 
+li{
+	display: inLine;
+}
+
+ul{
+	font-family: baufra;
+	outline: 10px solid rgb(153, 38, 30);
+	color: rgb(0, 132, 255);
+}
+
 p{
 	font-size: 30px;
 }
