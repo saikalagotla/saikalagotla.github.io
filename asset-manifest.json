@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/static/css/main.b0d5e4f2.css",
-    "main.js": "/static/js/main.f8818b2f.js",
+    "main.js": "/static/js/main.a08cc0b8.js",
     "static/js/787.21cc4626.chunk.js": "/static/js/787.21cc4626.chunk.js",
     "static/media/CrowdChordLogin.png": "/static/media/CrowdChordLogin.5fd2d353f576798a2763.png",
     "static/media/cognizantLogo.png": "/static/media/cognizantLogo.7d3bb3e7611e7a4c67b0.png",
@@ -10,18 +10,20 @@
     "static/media/mountains3.png": "/static/media/mountains3.99fc9acccd02786b01a6.png",
     "static/media/Kalagotla_Sai_Resume.pdf": "/static/media/Kalagotla_Sai_Resume.66821ad1b23673fb31fd.pdf",
     "static/media/DirecTvLogo.png": "/static/media/DirecTvLogo.577d207a6a34b0ab0ba7.png",
+    "static/media/email.png": "/static/media/email.0b8ca07de53b6b9c9dda.png",
     "static/media/cloud.png": "/static/media/cloud.c32904811bf89451fb7d.png",
     "static/media/cloud2.png": "/static/media/cloud2.db7088c312ddf6c98d05.png",
     "static/media/pixelgram.png": "/static/media/pixelgram.47dc1083654aa8b2ac5c.png",
+    "static/media/linkedin.png": "/static/media/linkedin.a2e5e6e526664ccea27d.png",
     "static/media/gear.png": "/static/media/gear.625f7f514e9e0c1fdbd0.png",
     "static/media/background.png": "/static/media/background.a0ccae5db0950f02c945.png",
     "index.html": "/index.html",
     "main.b0d5e4f2.css.map": "/static/css/main.b0d5e4f2.css.map",
-    "main.f8818b2f.js.map": "/static/js/main.f8818b2f.js.map",
+    "main.a08cc0b8.js.map": "/static/js/main.a08cc0b8.js.map",
     "787.21cc4626.chunk.js.map": "/static/js/787.21cc4626.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.b0d5e4f2.css",
-    "static/js/main.f8818b2f.js"
+    "static/js/main.a08cc0b8.js"
   ]
 }
