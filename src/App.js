@@ -104,15 +104,46 @@ const Projects = ({ projects, mode }) => {
   );
 };
 
+// Interpolate between two hex colors (t: 0 = colorA, 1 = colorB)
+function lerpHex(hexA, hexB, t) {
+  const parse = (hex) => {
+    const n = parseInt(hex.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+  const [r1, g1, b1] = parse(hexA);
+  const [r2, g2, b2] = parse(hexB);
+  const r = Math.round(r1 + (r2 - r1) * t);
+  const g = Math.round(g1 + (g2 - g1) * t);
+  const b = Math.round(b1 + (b2 - b1) * t);
+  return `rgb(${r},${g},${b})`;
+}
+
 function App() {
   let mode = useSelector((state) => state.colorMode.value);
 
   const ref = useRef();
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
 
   const [counter, setCounter] = useState(1);
+
+  // Track scroll position inside Parallax to drive sun→moon and background
+  useEffect(() => {
+    const container = ref.current?.container?.current;
+    if (!container) return;
+    const handleScroll = () => {
+      const scrollTop = container.scrollTop;
+      const space = ref.current?.space ?? window.innerHeight;
+      const totalScroll = space * 3; // 4 pages: scroll 0..3 viewport heights
+      const progress = Math.min(1, Math.max(0, scrollTop / totalScroll));
+      setScrollProgress(progress);
+    };
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const styles = {
     container: {
@@ -131,13 +162,51 @@ function App() {
   };
 
   return (
-    <Box className="container" style={{ width: "100%", height: "100%" }}>
-      <Parallax pages={4} ref={ref}>
-        {/* BACKGROUND */}
+    <Box className="container" style={{ position: "relative" }}>
+      {/* SUN / MOON - fixed to viewport top right */}
+      <Box
+        sx={{
+          position: "fixed",
+          top: 16,
+          right: 16,
+          width: 140,
+          height: 140,
+          zIndex: 10,
+          pointerEvents: "none",
+        }}
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            borderRadius: "50%",
+            background: "radial-gradient(circle at 35% 35%, #fff9e6, #ffd54f 40%, #ffb300)",
+            boxShadow: "0 0 60px 20px rgba(255, 213, 79, 0.5), 0 0 120px 40px rgba(255, 179, 0, 0.25)",
+            opacity: 1 - scrollProgress,
+            transition: "opacity 0.25s ease-out",
+          }}
+        />
+        {/* Moon: full moon (pale circle, no dark overlay) */}
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            borderRadius: "50%",
+            background: "radial-gradient(circle at 35% 35%, #fffef8, #e8e4d9 50%, #d4cfc4)",
+            boxShadow: "0 0 24px 8px rgba(232, 228, 217, 0.5)",
+            opacity: scrollProgress,
+            transition: "opacity 0.25s ease-out",
+          }}
+        />
+      </Box>
+
+      <Box sx={{ position: "absolute", inset: 0 }}>
+        <Parallax pages={4} ref={ref}>
+        {/* BACKGROUND - darkens as you scroll (sun → night) */}
         <ParallaxLayer
           factor={4}
           style={{
-            background: "linear-gradient(#2F3C7E, #FBEAEB)",
+            background: `linear-gradient(${lerpHex("#2F3C7E", "#0f0f23", scrollProgress)}, ${lerpHex("#FBEAEB", "#1a1a2e", scrollProgress)})`,
             backgroundSize: "cover",
             display: "flex",
             alignItems: "center",
@@ -330,6 +399,7 @@ function App() {
         </ParallaxLayer>
         {/* CONTACT */}
       </Parallax>
+      </Box>
     </Box>
   );
 }

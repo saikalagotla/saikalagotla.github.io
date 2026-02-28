@@ -39,7 +39,7 @@ function About({ mode }) {
           }}
           fontFamily={"sans-serif"}
         >
-          Front-end + Full-stack Developer
+          Full-stack Developer
         </Typography>
         <Typography
           sx={{
