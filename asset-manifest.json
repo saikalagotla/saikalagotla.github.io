@@ -1,12 +1,11 @@
 {
   "files": {
-    "main.css": "/static/css/main.ff99073c.css",
-    "main.js": "/static/js/main.f20b8fe0.js",
+    "main.css": "/static/css/main.41fdc675.css",
+    "main.js": "/static/js/main.20ad34ff.js",
     "static/js/787.21cc4626.chunk.js": "/static/js/787.21cc4626.chunk.js",
     "static/media/CrowdChordLogin.png": "/static/media/CrowdChordLogin.5fd2d353f576798a2763.png",
     "static/media/cognizantLogo.png": "/static/media/cognizantLogo.7d3bb3e7611e7a4c67b0.png",
     "static/media/CrowdChordArtistsPage.png": "/static/media/CrowdChordArtistsPage.9933fef5349107462bcd.png",
-    "static/media/mountains3.png": "/static/media/mountains3.99fc9acccd02786b01a6.png",
     "static/media/Kalagotla_Sai_Resume.pdf": "/static/media/Kalagotla_Sai_Resume.57caae979f7d08a0b421.pdf",
     "static/media/DirecTvLogo.png": "/static/media/DirecTvLogo.577d207a6a34b0ab0ba7.png",
     "static/media/email.png": "/static/media/email.0b8ca07de53b6b9c9dda.png",
@@ -16,12 +15,12 @@
     "static/media/linkedin.png": "/static/media/linkedin.a2e5e6e526664ccea27d.png",
     "static/media/gear.png": "/static/media/gear.625f7f514e9e0c1fdbd0.png",
     "index.html": "/index.html",
-    "main.ff99073c.css.map": "/static/css/main.ff99073c.css.map",
-    "main.f20b8fe0.js.map": "/static/js/main.f20b8fe0.js.map",
+    "main.41fdc675.css.map": "/static/css/main.41fdc675.css.map",
+    "main.20ad34ff.js.map": "/static/js/main.20ad34ff.js.map",
     "787.21cc4626.chunk.js.map": "/static/js/787.21cc4626.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.ff99073c.css",
-    "static/js/main.f20b8fe0.js"
+    "static/css/main.41fdc675.css",
+    "static/js/main.20ad34ff.js"
   ]
 }
