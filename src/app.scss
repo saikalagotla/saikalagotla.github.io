@@ -1,8 +1,14 @@
+/* Cartoon font - load first so it's available */
+@import url("https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap");
+
 html,
 body,
 #root {
   height: 100%;
   min-height: 100%;
+  cursor: none; /* custom sun cursor */
+  font-family: "Fredoka One", "Comic Sans MS", "Chalkboard", cursive, sans-serif !important;
+  font-weight: 500 !important;
 }
 
 html {
@@ -12,7 +18,19 @@ html {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "DM sans", sans-serif;
+  font-family: "Fredoka One", "Comic Sans MS", "Chalkboard", cursive, sans-serif !important;
+  font-weight: 500 !important;
+  cursor: none; /* custom sun cursor everywhere */
+}
+
+/* Override MUI typography and buttons so cartoon font applies */
+.MuiTypography-root,
+.MuiButton-root,
+.MuiButton-label,
+[class*="MuiTypography"],
+[class*="MuiButton"] {
+  font-family: "Fredoka One", "Comic Sans MS", "Chalkboard", cursive, sans-serif !important;
+  font-weight: 500 !important;
 }
 
 // body {
@@ -27,4 +45,180 @@ html {
 a {
   text-decoration: none;
   color: "inherit";
+}
+
+/* Keep custom sun cursor on buttons/links (override MUI cursor: pointer) */
+button,
+a,
+[role="button"],
+.MuiButton-root,
+.MuiIconButton-root {
+  cursor: none !important;
+  &:hover,
+  &:focus {
+    cursor: none !important;
+  }
+}
+
+/* Clouds: drift left to right across the screen */
+@keyframes cloudFloat {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(calc(100vw + 100%));
+  }
+}
+
+.clouds-container {
+  overflow: hidden;
+
+  .cloud-float {
+    will-change: transform;
+  }
+}
+
+/* Birds: invisible at start/end so never visible at edges; visible only while crossing screen */
+@keyframes birdFlyRight {
+  0% {
+    transform: translateX(calc(-100vw - 100%));
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(100vw + 100%));
+    opacity: 0;
+  }
+}
+
+@keyframes birdFlyLeft {
+  0% {
+    transform: scaleX(-1) translateX(calc(100vw + 100%));
+    opacity: 0;
+  }
+  3% {
+    opacity: 1;
+  }
+  97% {
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(-1) translateX(calc(-100vw - 100%));
+    opacity: 0;
+  }
+}
+
+/* Wing flap: speed set per-bird via animation-duration (faster flight = faster flap) */
+@keyframes birdFlapLeft {
+  0%,
+  100% {
+    transform: rotate(-28deg);
+  }
+  50% {
+    transform: rotate(18deg);
+  }
+}
+
+@keyframes birdFlapRight {
+  0%,
+  100% {
+    transform: rotate(28deg);
+  }
+  50% {
+    transform: rotate(-18deg);
+  }
+}
+
+.birds-container {
+  overflow: hidden;
+
+  .bird-fly-right,
+  .bird-fly-left {
+    will-change: transform;
+  }
+
+  .bird-fly-left {
+    transform-origin: right center; /* anchor on right so bird starts visible and moves left */
+  }
+
+  .bird-fly-right {
+    transform-origin: left center;
+  }
+
+  .bird-wing-left,
+  .bird-wing-right {
+    transform-origin: 14px 8px;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  .bird-wing-left {
+    animation-name: birdFlapLeft;
+  }
+
+  .bird-wing-right {
+    animation-name: birdFlapRight;
+  }
+}
+
+/* Train: moves from right to left (starts off-screen right, exits off-screen left) */
+@keyframes trainRightToLeft {
+  0% {
+    transform: translateX(100vw);
+  }
+  100% {
+    transform: translateX(-150vw);
+  }
+}
+
+/* Grass blowing in the wind */
+@keyframes grassWind {
+  0%,
+  100% {
+    transform: rotate(-5deg);
+  }
+  25% {
+    transform: rotate(2deg);
+  }
+  50% {
+    transform: rotate(6deg);
+  }
+  75% {
+    transform: rotate(0deg);
+  }
+}
+
+.road-and-train-scene {
+  .train-animate {
+    will-change: transform;
+    animation: trainRightToLeft 25s linear infinite;
+
+    &.train-delay {
+      animation-delay: -12.5s; /* Half cycle: second train starts mid-journey so one is always on screen */
+    }
+  }
+
+  .grass-blade {
+    will-change: transform;
+    animation: grassWind 2.5s ease-in-out infinite;
+    transform-origin: center bottom;
+
+    &.grass-delay-0 {
+      animation-delay: 0s;
+    }
+    &.grass-delay-1 {
+      animation-delay: 0.4s;
+    }
+    &.grass-delay-2 {
+      animation-delay: 0.8s;
+    }
+    &.grass-delay-3 {
+      animation-delay: 1.2s;
+    }
+  }
 }

@@ -2,7 +2,23 @@ import React from "react";
 import { Typography, Box, Button } from "@mui/material";
 import PDF from "../../assets/Kalagotla_Sai_Resume.pdf";
 
-function About({ mode }) {
+function lerpHex(hexA, hexB, t) {
+  const parse = (hex) => {
+    const n = parseInt(hex.slice(1), 16);
+    return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+  };
+  const [r1, g1, b1] = parse(hexA);
+  const [r2, g2, b2] = parse(hexB);
+  const r = Math.round(r1 + (r2 - r1) * t);
+  const g = Math.round(g1 + (g2 - g1) * t);
+  const b = Math.round(b1 + (b2 - b1) * t);
+  return `rgb(${r},${g},${b})`;
+}
+
+function About({ mode, scrollProgress = 0 }) {
+  const textColor = lerpHex("#1a1a2e", "#FBEAEB", scrollProgress);
+  const subtextColor = lerpHex("#2F3C7E", "#E8E4E8", scrollProgress);
+  const buttonColor = lerpHex("#1a1a2e", "#FBEAEB", scrollProgress);
   return (
     <Box
       sx={{
@@ -24,9 +40,9 @@ function About({ mode }) {
         <Typography
           sx={{
             fontSize: { xs: "30px", sm: "30px", md: "40px", lg: "50px" },
-            color: mode === "dark" ? "#777BA4" : "#36367B",
+            color: textColor,
+            textShadow: "0 1px 2px rgba(0,0,0,0.08)",
           }}
-          fontFamily={"sans-serif"}
         >
           Sai Dheeraj Kalagotla
         </Typography>
@@ -37,16 +53,15 @@ function About({ mode }) {
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
           }}
-          fontFamily={"sans-serif"}
         >
           Full-stack Developer
         </Typography>
         <Typography
           sx={{
             fontSize: { xs: "15px", sm: "15px", md: "15px", lg: "20px" },
-            color: mode === "dark" ? "#A9A3C1" : "#575380",
+            color: subtextColor,
+            textShadow: "0 1px 2px rgba(0,0,0,0.08)",
           }}
-          fontFamily={"sans-serif"}
         >
           I'm a passionate software developer with a love for creating
           innovative and efficient solutions through code.
@@ -59,15 +74,15 @@ function About({ mode }) {
             fontSize: { xs: "20px", sm: "20px", md: "20px", lg: "25px" },
             marginTop: "2%",
             width: "fit-content",
-            color: "#FBEAEB",
-            border: "2px solid #FBEAEB",
+            color: buttonColor,
+            border: `2px solid ${buttonColor}`,
             "&:hover": {
-              border: "2px solid orange",
-              color: "orange",
+              border: "2px solid #ff9800",
+              color: "#ff9800",
             },
           }}
         >
-          <Typography>Resume</Typography>
+          <Typography sx={{ color: "inherit" }}>Resume</Typography>
         </Button>
       </Box>
     </Box>

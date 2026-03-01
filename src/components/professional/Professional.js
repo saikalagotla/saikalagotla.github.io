@@ -11,7 +11,7 @@ const Experience = ({ mode, experience }) => {
         justifyContent: "start",
         width: "40%",
         minWidth: "350px",
-        backgroundColor: "#17141D",
+        backgroundColor: "#1a1a2e",
         padding: { xs: "15px", sm: "20px", md: "30px", lg: "50px" },
         borderRadius: "20px",
         transition: "transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out",
@@ -32,18 +32,16 @@ const Experience = ({ mode, experience }) => {
           <Typography
             sx={{
               fontSize: { xs: "15px", sm: "15px", md: "15px", lg: "20px" },
-              color: mode === "dark" ? "#FFFFFF" : "#575380",
+              color: "#FFFFFF",
             }}
-            fontFamily={"sans-serif"}
           >
             {experience.title}
           </Typography>
           <Typography
             sx={{
               fontSize: { xs: "15px", sm: "15px", md: "15px", lg: "20px" },
-              color: mode === "dark" ? "#A9A3C1" : "#575380",
+              color: "#D4D0E0",
             }}
-            fontFamily={"sans-serif"}
           >
             {experience.timePeriod}
           </Typography>
@@ -55,9 +53,8 @@ const Experience = ({ mode, experience }) => {
             <Typography
               sx={{
                 fontSize: { xs: "15px", sm: "15px", md: "15px", lg: "20px" },
-                color: mode === "dark" ? "#A9A3C1" : "#575380",
+                color: "#E0DCE8",
               }}
-              fontFamily={"sans-serif"}
             >
               • {desc}
             </Typography>

@@ -18,7 +18,7 @@ function Project({
         flexDirection: "column",
         borderRadius: "20px",
         padding: "50px",
-        backgroundColor: "#17141D",
+        backgroundColor: "#1a1a2e",
         width: "33%",
         minWidth: "300px",
         margin: "20px",
@@ -47,19 +47,17 @@ function Project({
           <Typography
             sx={{
               fontSize: { xs: "15px", sm: "15px", md: "15px", lg: "20px" },
-              color: mode === "dark" ? "#FFFFFF" : "#36367B",
+              color: "#FFFFFF",
             }}
-            fontFamily={"sans-serif"}
           >
             {name}
           </Typography>
           <Typography
             sx={{
               fontSize: { xs: "15px", sm: "15px", md: "15px", lg: "20px" },
-              color: mode === "dark" ? "#A9A3C1" : "#36367B",
+              color: "#D4D0E0",
               marginBottom: "10px",
             }}
-            fontFamily={"sans-serif"}
           >
             {subName}
           </Typography>
@@ -70,9 +68,8 @@ function Project({
           <Typography
             sx={{
               fontSize: { xs: "15px", sm: "15px", md: "15px", lg: "20px" },
-              color: mode === "dark" ? "#A9A3C1" : "#575380",
+              color: "#E0DCE8",
             }}
-            fontFamily={"sans-serif"}
           >
             • {desc}
           </Typography>

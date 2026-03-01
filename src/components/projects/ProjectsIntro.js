@@ -21,7 +21,6 @@ function ProjectsIntro({ mode }) {
           // WebkitBackgroundClip: "text",
           // WebkitTextFillColor: "transparent",
         }}
-        fontFamily={"sans-serif"}
       >
         Personal Projects
       </Typography>
