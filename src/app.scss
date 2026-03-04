@@ -72,10 +72,6 @@ a,
 
 .clouds-container {
   overflow: hidden;
-
-  .cloud-float {
-    will-change: transform;
-  }
 }
 
 /* Birds: invisible at start/end so never visible at edges; visible only while crossing screen */
@@ -137,11 +133,6 @@ a,
 .birds-container {
   overflow: hidden;
 
-  .bird-fly-right,
-  .bird-fly-left {
-    will-change: transform;
-  }
-
   .bird-fly-left {
     transform-origin: right center; /* anchor on right so bird starts visible and moves left */
   }
@@ -193,9 +184,26 @@ a,
   }
 }
 
+/* Chimney smoke: puffs rise higher and slowly fade out */
+@keyframes smokeRise {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.9;
+  }
+  40% {
+    opacity: 0.7;
+  }
+  70% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: translate(0, -55px) scale(2);
+    opacity: 0;
+  }
+}
+
 .road-and-train-scene {
   .train-animate {
-    will-change: transform;
     animation: trainRightToLeft 25s linear infinite;
 
     &.train-delay {
@@ -203,9 +211,92 @@ a,
     }
   }
 
+  .train-smoke {
+    transform-origin: 45px 8px;
+    pointer-events: none;
+  }
+
+  /* People on train: bounce and sway (different timing per person) */
+  @keyframes personBounceSway {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(-3deg);
+    }
+    25% {
+      transform: translate(0, -5px) rotate(2deg);
+    }
+    50% {
+      transform: translate(0, -2px) rotate(4deg);
+    }
+    75% {
+      transform: translate(0, -4px) rotate(-2deg);
+    }
+  }
+
+  .person-on-train {
+    transform-origin: 0 12px;
+    animation: personBounceSway 1.1s ease-in-out infinite;
+
+    &.person-move-1 {
+      animation-delay: 0s;
+    }
+    &.person-move-2 {
+      animation-delay: 0.15s;
+      animation-duration: 1.3s;
+    }
+    &.person-move-3 {
+      animation-delay: 0.3s;
+      animation-duration: 0.95s;
+    }
+    &.person-move-4 {
+      animation-delay: 0.45s;
+      animation-duration: 1.25s;
+    }
+    &.person-move-5 {
+      animation-delay: 0.2s;
+      animation-duration: 1.05s;
+    }
+    &.person-move-6 {
+      animation-delay: 0.5s;
+      animation-duration: 1.15s;
+    }
+    &.person-move-7 {
+      animation-delay: 0.1s;
+      animation-duration: 1.2s;
+    }
+    &.person-move-8 {
+      animation-delay: 0.55s;
+      animation-duration: 1s;
+    }
+    &.person-move-9 {
+      animation-delay: 0.25s;
+      animation-duration: 1.35s;
+    }
+    &.person-move-10 {
+      animation-delay: 0.4s;
+      animation-duration: 1.1s;
+    }
+  }
+
+  .smoke-puff {
+    animation: smokeRise 4s ease-out infinite;
+
+    &.smoke-puff-1 {
+      animation-delay: 0s;
+    }
+    &.smoke-puff-2 {
+      animation-delay: 0.5s;
+    }
+    &.smoke-puff-3 {
+      animation-delay: 1s;
+    }
+    &.smoke-puff-4 {
+      animation-delay: 1.5s;
+    }
+  }
+
   .grass-blade {
-    will-change: transform;
-    animation: grassWind 2.5s ease-in-out infinite;
+    animation: grassWind 2.8s ease-in-out infinite;
     transform-origin: center bottom;
 
     &.grass-delay-0 {

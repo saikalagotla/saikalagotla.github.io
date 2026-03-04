@@ -1,6 +1,46 @@
 import React, { memo } from "react";
 import { Box } from "@mui/material";
 
+// Colors for people on train (complementary to app: navy, blush, amber, train blues, grass)
+const PERSON_COLORS = ["#8b6b7c", "#a65d4a", "#b8860b", "#4a5f7a", "#2a3a4e", "#5a7a65"];
+// At least 2 people per car; no people on main engine. Car 1, 2, 3, 4, caboose = 5 cars × 2 = 10 people.
+const PEOPLE_ON_TRAIN = [
+  { x: 185, y: 16 }, { x: 218, y: 16 },   // car 1 (boxcar)
+  { x: 256, y: 14 }, { x: 288, y: 14 },   // car 2
+  { x: 328, y: 15 }, { x: 352, y: 15 },   // car 3
+  { x: 392, y: 14 }, { x: 422, y: 14 },   // car 4
+  { x: 458, y: 10 }, { x: 486, y: 10 },   // caboose
+];
+
+function PersonCutout({ x, y, color, animClass }) {
+  return (
+    <g transform={`translate(${x}, ${y})`}>
+      <g className={`person-on-train ${animClass}`}>
+        {/* Front view: head centered */}
+        <rect x="-2" y="0" width="4" height="4" rx="0.5" fill={color} />
+        {/* Body centered */}
+        <rect x="-2.5" y="4" width="5" height="5" rx="0.5" fill={color} />
+        {/* Left arm (longer, up and out from left shoulder) */}
+        <g transform="translate(-1.8, 4) rotate(-35) translate(0, -3.8)">
+          <rect x="-0.5" y="0" width="1" height="3.8" rx="0.3" fill={color} />
+        </g>
+        {/* Right arm (longer, up and out from right shoulder) */}
+        <g transform="translate(1.8, 4) rotate(35) translate(0, -3.8)">
+          <rect x="-0.5" y="0" width="1" height="3.8" rx="0.3" fill={color} />
+        </g>
+        {/* Left leg (well spaced so both visible) */}
+        <g transform="translate(-1.15, 9) rotate(-8)">
+          <rect x="-0.55" y="0" width="1.1" height="3" rx="0.2" fill={color} />
+        </g>
+        {/* Right leg (well spaced so both visible) */}
+        <g transform="translate(1.15, 9) rotate(8)">
+          <rect x="-0.55" y="0" width="1.1" height="3" rx="0.2" fill={color} />
+        </g>
+      </g>
+    </g>
+  );
+}
+
 function RoadAndTrain() {
   return (
     <Box
@@ -57,14 +97,14 @@ function RoadAndTrain() {
         />
 
         {/* Rocks on the road */}
-        <ellipse cx="120" cy="200" rx="28" ry="18" fill="url(#rockGradient)" />
-        <ellipse cx="380" cy="185" rx="22" ry="14" fill="url(#rockGradient)" />
-        <ellipse cx="520" cy="195" rx="18" ry="12" fill="url(#rockGradient)" />
-        <ellipse cx="720" cy="188" rx="25" ry="16" fill="url(#rockGradient)" />
-        <ellipse cx="950" cy="192" rx="20" ry="13" fill="url(#rockGradient)" />
-        <circle cx="280" cy="178" r="12" fill="url(#rockGradient)" />
-        <circle cx="620" cy="182" r="10" fill="url(#rockGradient)" />
-        <circle cx="820" cy="175" r="14" fill="url(#rockGradient)" />
+        <ellipse cx="120" cy="200" rx="15" ry="10" fill="url(#rockGradient)" />
+        <ellipse cx="380" cy="185" rx="12" ry="8" fill="url(#rockGradient)" />
+        <ellipse cx="520" cy="195" rx="10" ry="7" fill="url(#rockGradient)" />
+        <ellipse cx="720" cy="188" rx="14" ry="9" fill="url(#rockGradient)" />
+        <ellipse cx="950" cy="192" rx="11" ry="7" fill="url(#rockGradient)" />
+        <circle cx="280" cy="178" r="7" fill="url(#rockGradient)" />
+        <circle cx="620" cy="182" r="6" fill="url(#rockGradient)" />
+        <circle cx="820" cy="175" r="8" fill="url(#rockGradient)" />
 
         {/* Railroad ties and rails - drawn ON TOP of dirt */}
         {[...Array(35)].map((_, i) => (
@@ -113,9 +153,9 @@ function RoadAndTrain() {
             [60, 208], [120, 212], [180, 207], [230, 211], [280, 208], [330, 213], [380, 209], [430, 212], [480, 208], [530, 211], [580, 207], [630, 212], [680, 209], [730, 213], [780, 208], [830, 211], [880, 207], [930, 212], [980, 209], [1030, 211], [1080, 208], [1130, 212], [1180, 209],
             [100, 222], [160, 225], [220, 221], [270, 226], [320, 223], [370, 227], [420, 222], [470, 225], [520, 221], [570, 226], [620, 223], [670, 227], [720, 222], [770, 225], [820, 221], [870, 226], [920, 223], [970, 227], [1020, 222], [1070, 225], [1120, 221], [1160, 226],
             [75, 238], [140, 241], [200, 237], [250, 242], [300, 239], [350, 243], [400, 238], [450, 242], [500, 237], [550, 241], [600, 239], [650, 243], [700, 238], [750, 242], [800, 237], [850, 241], [900, 239], [950, 243], [1000, 238], [1050, 242], [1100, 237], [1150, 241], [1195, 239],
-          ].filter(([x, y]) => y > 155).map(([x, y], i) => (
+          ].filter(([x, y]) => y > 155).filter((_, i) => i % 2 === 0).map(([x, y], i) => (
             <g key={`g1-${i}`} className={`grass-blade grass-delay-${i % 4}`} style={{ transformOrigin: `${x}px ${y}px` }}>
-              <path d={`M ${x} ${y} Q ${x + 2} ${y - 14} ${x + 4} ${y - 28}`} stroke="url(#grassGradientOverlay)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+              <path d={`M ${x} ${y} Q ${x + 2} ${y - 7} ${x + 4} ${y - 14}`} stroke="url(#grassGradientOverlay)" strokeWidth="2.5" strokeLinecap="round" fill="none" />
             </g>
           ))}
           {[
@@ -127,9 +167,9 @@ function RoadAndTrain() {
             [110, 202], [170, 205], [220, 201], [270, 206], [320, 203], [370, 200], [420, 205], [470, 202], [520, 204], [570, 201], [620, 206], [670, 203], [720, 205], [770, 201], [820, 206], [870, 202], [920, 204], [970, 201], [1020, 206], [1070, 203], [1120, 205], [1170, 202],
             [70, 216], [130, 219], [190, 215], [240, 220], [290, 217], [340, 214], [390, 219], [440, 216], [490, 218], [540, 215], [590, 220], [640, 217], [690, 219], [740, 215], [790, 220], [840, 216], [890, 218], [940, 215], [990, 219], [1040, 216], [1090, 218], [1140, 215], [1190, 219],
             [90, 232], [150, 235], [210, 231], [260, 236], [310, 233], [360, 230], [410, 235], [460, 232], [510, 234], [560, 231], [610, 236], [660, 233], [710, 235], [760, 231], [810, 236], [860, 232], [910, 234], [960, 231], [1010, 235], [1060, 232], [1110, 234], [1160, 231], [1185, 235],
-          ].filter(([x, y]) => y > 155).map(([x, y], i) => (
+          ].filter(([x, y]) => y > 155).filter((_, i) => i % 2 === 0).map(([x, y], i) => (
             <g key={`g2-${i}`} className={`grass-blade grass-delay-${i % 4}`} style={{ transformOrigin: `${x}px ${y}px` }}>
-              <path d={`M ${x} ${y} Q ${x - 1} ${y - 10} ${x - 2} ${y - 20}`} stroke="url(#grassGradientOverlay)" strokeWidth="2" strokeLinecap="round" fill="none" />
+              <path d={`M ${x} ${y} Q ${x - 1} ${y - 5} ${x - 2} ${y - 10}`} stroke="url(#grassGradientOverlay)" strokeWidth="2" strokeLinecap="round" fill="none" />
             </g>
           ))}
         </svg>
@@ -148,7 +188,7 @@ function RoadAndTrain() {
         }}
       >
         <svg
-          viewBox="0 0 520 80"
+          viewBox="0 -55 520 135"
           preserveAspectRatio="xMidYMid meet"
           style={{ width: "100%", height: "auto", display: "block" }}
         >
@@ -185,6 +225,15 @@ function RoadAndTrain() {
               <stop offset="0%" stopColor="#554a3d" />
               <stop offset="100%" stopColor="#352e26" />
             </linearGradient>
+            <filter id="smokeFilter" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+              <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.6 0" result="smoke" />
+              <feBlend in="SourceGraphic" in2="smoke" mode="normal" />
+            </filter>
+            <radialGradient id="smokeGrad" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#e8e8e8" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#a0a0a0" stopOpacity="0" />
+            </radialGradient>
           </defs>
           {/* Locomotive body */}
           <rect x="10" y="25" width="100" height="45" rx="4" fill="url(#trainBody)" />
@@ -195,6 +244,13 @@ function RoadAndTrain() {
           <rect x="142" y="28" width="18" height="16" rx="2" fill="#87CEEB" />
           {/* Chimney / smokestack */}
           <rect x="35" y="8" width="20" height="22" rx="2" fill="#2a2a2a" />
+          {/* Chimney smoke - puffs rise and fade (drawn on top of chimney) */}
+          <g className="train-smoke" filter="url(#smokeFilter)">
+            <circle cx="45" cy="8" r="6" fill="url(#smokeGrad)" className="smoke-puff smoke-puff-1" />
+            <circle cx="45" cy="8" r="5" fill="url(#smokeGrad)" className="smoke-puff smoke-puff-2" />
+            <circle cx="45" cy="8" r="7" fill="url(#smokeGrad)" className="smoke-puff smoke-puff-3" />
+            <circle cx="45" cy="8" r="5" fill="url(#smokeGrad)" className="smoke-puff smoke-puff-4" />
+          </g>
           {/* Locomotive wheels */}
           <circle cx="45" cy="72" r="12" fill="url(#wheelGrad)" stroke="#444" strokeWidth="2" />
           <circle cx="85" cy="72" r="12" fill="url(#wheelGrad)" stroke="#444" strokeWidth="2" />
@@ -233,6 +289,11 @@ function RoadAndTrain() {
           <rect x="468" y="30" width="12" height="14" rx="1" fill="#87CEEB" />
           <circle cx="458" cy="72" r="10" fill="url(#wheelGrad)" stroke="#444" strokeWidth="2" />
           <circle cx="486" cy="72" r="10" fill="url(#wheelGrad)" stroke="#444" strokeWidth="2" />
+
+          {/* People on top - different colors, bouncing & swaying */}
+          {PEOPLE_ON_TRAIN.map((p, i) => (
+            <PersonCutout key={i} x={p.x} y={p.y} color={PERSON_COLORS[i % PERSON_COLORS.length]} animClass={`person-move-${i + 1}`} />
+          ))}
         </svg>
       </Box>
 
@@ -249,7 +310,7 @@ function RoadAndTrain() {
         }}
       >
         <svg
-          viewBox="0 0 520 80"
+          viewBox="0 -55 520 135"
           preserveAspectRatio="xMidYMid meet"
           style={{ width: "100%", height: "auto", display: "block" }}
         >
@@ -286,12 +347,27 @@ function RoadAndTrain() {
               <stop offset="0%" stopColor="#554a3d" />
               <stop offset="100%" stopColor="#352e26" />
             </linearGradient>
+            <filter id="smokeFilter2" x="-50%" y="-50%" width="200%" height="200%">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur" />
+              <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.6 0" result="smoke" />
+              <feBlend in="SourceGraphic" in2="smoke" mode="normal" />
+            </filter>
+            <radialGradient id="smokeGrad2" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stopColor="#e8e8e8" stopOpacity="0.9" />
+              <stop offset="100%" stopColor="#a0a0a0" stopOpacity="0" />
+            </radialGradient>
           </defs>
           <rect x="10" y="25" width="100" height="45" rx="4" fill="url(#trainBody2)" />
           <rect x="110" y="20" width="55" height="50" rx="4" fill="url(#trainCab2)" />
           <rect x="120" y="28" width="18" height="16" rx="2" fill="#87CEEB" />
           <rect x="142" y="28" width="18" height="16" rx="2" fill="#87CEEB" />
           <rect x="35" y="8" width="20" height="22" rx="2" fill="#2a2a2a" />
+          <g className="train-smoke" filter="url(#smokeFilter2)">
+            <circle cx="45" cy="8" r="6" fill="url(#smokeGrad2)" className="smoke-puff smoke-puff-1" />
+            <circle cx="45" cy="8" r="5" fill="url(#smokeGrad2)" className="smoke-puff smoke-puff-2" />
+            <circle cx="45" cy="8" r="7" fill="url(#smokeGrad2)" className="smoke-puff smoke-puff-3" />
+            <circle cx="45" cy="8" r="5" fill="url(#smokeGrad2)" className="smoke-puff smoke-puff-4" />
+          </g>
           <circle cx="45" cy="72" r="12" fill="url(#wheelGrad2)" stroke="#444" strokeWidth="2" />
           <circle cx="85" cy="72" r="12" fill="url(#wheelGrad2)" stroke="#444" strokeWidth="2" />
           <circle cx="125" cy="72" r="12" fill="url(#wheelGrad2)" stroke="#444" strokeWidth="2" />
@@ -318,6 +394,10 @@ function RoadAndTrain() {
           <rect x="468" y="30" width="12" height="14" rx="1" fill="#87CEEB" />
           <circle cx="458" cy="72" r="10" fill="url(#wheelGrad2)" stroke="#444" strokeWidth="2" />
           <circle cx="486" cy="72" r="10" fill="url(#wheelGrad2)" stroke="#444" strokeWidth="2" />
+
+          {PEOPLE_ON_TRAIN.map((p, i) => (
+            <PersonCutout key={i} x={p.x} y={p.y} color={PERSON_COLORS[i % PERSON_COLORS.length]} animClass={`person-move-${i + 1}`} />
+          ))}
         </svg>
       </Box>
     </Box>

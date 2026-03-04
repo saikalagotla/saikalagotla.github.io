@@ -48,7 +48,7 @@ const projects = [
 
 // Cloud config: random positions across full scroll, no overlap (vertical slots + staggered animation)
 const CLOUD_IMAGES = [cloud, cloud2];
-const NUM_CLOUDS = 14;
+const NUM_CLOUDS = 8;
 const NUM_VERTICAL_SLOTS = 20; // slots across 4 pages to avoid vertical overlap
 const SLOT_HEIGHT_PCT = 100 / NUM_VERTICAL_SLOTS;
 
@@ -80,7 +80,16 @@ function getCloudPositions() {
 const cloudPositions = getCloudPositions();
 
 // Birds in the sky: half left→right (like clouds), half right→left. Flap speed matches flight speed.
-const BIRD_COUNT = 12;
+// Colors complement app palette: navy (#2F3C7E), blush (#FBEAEB), sun amber (#ffb300), train blues, grass greens.
+const BIRD_COLORS = [
+  "#8b6b7c", // dusty mauve (blush family)
+  "#a65d4a", // terracotta (warm, complements navy)
+  "#b8860b", // dark golden (sun palette)
+  "#4a5f7a", // slate blue (train/navy)
+  "#2a3a4e", // deep navy
+  "#5a7a65", // sage (grass family)
+];
+const BIRD_COUNT = 6;
 function getBirdPositions() {
   const positions = [];
   for (let i = 0; i < BIRD_COUNT; i++) {
@@ -99,6 +108,7 @@ function getBirdPositions() {
       delay: `${delay}s`,
       size: 24 + Math.random() * 14,
       flapDuration: `${flapDurationSec}s`,
+      color: BIRD_COLORS[i % BIRD_COLORS.length],
     });
   }
   return positions;
@@ -186,18 +196,15 @@ function App() {
   let mode = useSelector((state) => state.colorMode.value);
 
   const ref = useRef();
+  const sunRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [displayPos, setDisplayPos] = useState({ x: null, y: null });
   const targetPosRef = useRef({ x: null, y: null });
   const currentPosRef = useRef({ x: null, y: null });
 
-  const windowWidth = window.innerWidth;
-  const windowHeight = window.innerHeight;
   const sunSize = 32; // cursor-sized
-  const sunHalf = sunSize / 2;
   const LERP = 0.22; // snappier when used as cursor
 
-  // Sun as custom cursor: track raw mouse position (no clamping so it can reach edges)
+  // Sun as custom cursor: track mouse in ref only (no React state → no re-renders every frame)
   useEffect(() => {
     const handleMouseMove = (e) => {
       targetPosRef.current = { x: e.clientX, y: e.clientY };
@@ -206,24 +213,33 @@ function App() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // Smooth lerp toward target every frame
+  // Smooth lerp: update sun position via DOM ref (avoids 60fps setState re-renders)
   useEffect(() => {
     let rafId;
     const tick = () => {
       const target = targetPosRef.current;
       const current = currentPosRef.current;
+      const el = sunRef.current;
       if (target.x == null || target.y == null) {
         rafId = requestAnimationFrame(tick);
         return;
       }
       if (current.x == null || current.y == null) {
         currentPosRef.current = { x: target.x, y: target.y };
-        setDisplayPos({ x: target.x, y: target.y });
+        if (el) {
+          el.style.left = target.x + "px";
+          el.style.top = target.y + "px";
+          el.style.visibility = "visible";
+        }
       } else {
         const x = current.x + (target.x - current.x) * LERP;
         const y = current.y + (target.y - current.y) * LERP;
         currentPosRef.current = { x, y };
-        setDisplayPos({ x, y });
+        if (el) {
+          el.style.left = x + "px";
+          el.style.top = y + "px";
+          el.style.visibility = "visible";
+        }
       }
       rafId = requestAnimationFrame(tick);
     };
@@ -233,7 +249,8 @@ function App() {
 
   const [counter, setCounter] = useState(1);
 
-  // Track scroll position (throttled with RAF to reduce re-renders and jank)
+  // Track scroll: RAF + throttle so we only re-render when progress changes meaningfully
+  const lastProgressRef = useRef(0);
   useEffect(() => {
     const container = ref.current;
     if (!container) return;
@@ -246,7 +263,10 @@ function App() {
         const maxScroll = Math.max(0, scrollHeight - clientHeight);
         const progress =
           maxScroll > 0 ? Math.min(1, Math.max(0, scrollTop / maxScroll)) : 0;
-        setScrollProgress(progress);
+        if (Math.abs(progress - lastProgressRef.current) > 0.012) {
+          lastProgressRef.current = progress;
+          setScrollProgress(progress);
+        }
       });
     };
     container.addEventListener("scroll", handleScroll, { passive: true });
@@ -260,7 +280,7 @@ function App() {
   // Stars: single SVG (one DOM node) for better performance
   const starPositions = useMemo(() => {
     const list = [];
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 45; i++) {
       list.push({
         id: i,
         x: Math.random() * 100,
@@ -280,9 +300,11 @@ function App() {
       cloudShadow: lerpHex("#8a8583", "#e8e8e8", scrollProgress),
       titleColor: lerpHex("#1a1a2e", "#FBEAEB", scrollProgress),
       starsOpacity:
-        scrollProgress >= 0.75 ? Math.min(1, (scrollProgress - 0.75) / 0.25) : 0,
+        scrollProgress >= 0.75
+          ? Math.min(1, (scrollProgress - 0.75) / 0.25)
+          : 0,
     }),
-    [scrollProgress]
+    [scrollProgress],
   );
 
   const styles = {
@@ -303,22 +325,19 @@ function App() {
 
   return (
     <Box className="container" style={{ position: "relative" }}>
-      {/* SUN / MOON - custom cursor (small, follows mouse) */}
+      {/* SUN / MOON - position updated via ref (no re-renders); opacity still from scroll */}
       <Box
+        ref={sunRef}
         sx={{
           position: "fixed",
-          ...(displayPos.x != null && displayPos.y != null
-            ? {
-                left: displayPos.x,
-                top: displayPos.y,
-                transform: "translate(-50%, -50%)",
-              }
-            : { left: 0, top: 0, visibility: "hidden" }),
+          left: 0,
+          top: 0,
+          visibility: "hidden",
+          transform: "translate(-50%, -50%)",
           width: sunSize,
           height: sunSize,
           zIndex: 9999,
           pointerEvents: "none",
-          willChange: "left, top",
         }}
       >
         <Box
@@ -371,7 +390,12 @@ function App() {
           transition: "opacity 0.4s ease-out",
         }}
       >
-        <svg width="100%" height="100%" style={{ display: "block" }} preserveAspectRatio="none">
+        <svg
+          width="100%"
+          height="100%"
+          style={{ display: "block" }}
+          preserveAspectRatio="none"
+        >
           {starPositions.map((s) => (
             <circle
               key={s.id}
@@ -440,7 +464,9 @@ function App() {
         {birdPositions.map((b) => (
           <Box
             key={b.id}
-            className={b.direction === "right" ? "bird-fly-right" : "bird-fly-left"}
+            className={
+              b.direction === "right" ? "bird-fly-right" : "bird-fly-left"
+            }
             sx={{
               position: "absolute",
               top: b.top,
@@ -462,36 +488,61 @@ function App() {
               sx={{
                 width: "100%",
                 height: "100%",
-                transform: b.direction === "right" ? "rotateY(-25deg)" : "rotateY(25deg)",
+                transform:
+                  b.direction === "right"
+                    ? "rotateY(-25deg)"
+                    : "rotateY(25deg)",
                 transformStyle: "preserve-3d",
               }}
             >
               <svg
-              viewBox="0 0 28 16"
-              fill="none"
-              style={{ width: "100%", height: "100%", display: "block", filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.5))" }}
-            >
-              {/* Body - shadow silhouette */}
-              <ellipse cx="14" cy="8" rx="2" ry="3" fill="rgba(0,0,0,0.6)" />
-              {/* Left wing - flaps down/up */}
-              <g className="bird-wing-left" style={{ animationDuration: b.flapDuration }}>
-                <path
-                  d="M14 8 Q6 4 2 6 Q6 10 14 8"
-                  fill="rgba(0,0,0,0.6)"
-                  stroke="rgba(0,0,0,0.45)"
-                  strokeWidth="0.8"
+                viewBox="0 0 28 16"
+                fill="none"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "block",
+                  filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.35))",
+                }}
+              >
+                {/* Body - colored silhouette */}
+                <ellipse
+                  cx="14"
+                  cy="8"
+                  rx="2"
+                  ry="3"
+                  fill={b.color}
+                  fillOpacity="0.9"
                 />
-              </g>
-              {/* Right wing - flaps down/up (mirrored) */}
-              <g className="bird-wing-right" style={{ animationDuration: b.flapDuration }}>
-                <path
-                  d="M14 8 Q22 4 26 6 Q22 10 14 8"
-                  fill="rgba(0,0,0,0.6)"
-                  stroke="rgba(0,0,0,0.45)"
-                  strokeWidth="0.8"
-                />
-              </g>
-            </svg>
+                {/* Left wing - flaps down/up */}
+                <g
+                  className="bird-wing-left"
+                  style={{ animationDuration: b.flapDuration }}
+                >
+                  <path
+                    d="M14 8 Q6 4 2 6 Q6 10 14 8"
+                    fill={b.color}
+                    fillOpacity="0.9"
+                    stroke={b.color}
+                    strokeOpacity="0.7"
+                    strokeWidth="0.8"
+                  />
+                </g>
+                {/* Right wing - flaps down/up (mirrored) */}
+                <g
+                  className="bird-wing-right"
+                  style={{ animationDuration: b.flapDuration }}
+                >
+                  <path
+                    d="M14 8 Q22 4 26 6 Q22 10 14 8"
+                    fill={b.color}
+                    fillOpacity="0.9"
+                    stroke={b.color}
+                    strokeOpacity="0.7"
+                    strokeWidth="0.8"
+                  />
+                </g>
+              </svg>
             </Box>
           </Box>
         ))}
