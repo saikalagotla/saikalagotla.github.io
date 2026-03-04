@@ -157,13 +157,13 @@ a,
   }
 }
 
-/* Train: moves from right to left (starts off-screen right, exits off-screen left) */
+/* Train: starts off-screen right, exits off-screen left; 40% offset so train enters faster */
 @keyframes trainRightToLeft {
   0% {
-    transform: translateX(100vw);
+    transform: translateX(calc(100vw + 40%));
   }
   100% {
-    transform: translateX(-150vw);
+    transform: translateX(calc(-100vw - 40%));
   }
 }
 
@@ -184,36 +184,100 @@ a,
   }
 }
 
-/* Chimney smoke: puffs rise higher and slowly fade out */
+/* Chimney smoke: desktop – rise and slowly disappear */
 @keyframes smokeRise {
   0% {
     transform: translate(0, 0) scale(1);
     opacity: 0.9;
   }
-  40% {
+  45% {
     opacity: 0.7;
   }
   70% {
-    opacity: 0.35;
+    opacity: 0.25;
+  }
+  85% {
+    opacity: 0;
   }
   100% {
-    transform: translate(0, -55px) scale(2);
+    transform: translate(0, -55px) scale(1.8);
+    opacity: 0;
+  }
+}
+
+/* Chimney smoke: smaller screens – shorter rise, fade out earlier so it never gets clipped */
+@keyframes smokeRiseShort {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.9;
+  }
+  40% {
+    opacity: 0.65;
+  }
+  62% {
+    opacity: 0.2;
+  }
+  72% {
+    opacity: 0;
+  }
+  100% {
+    transform: translate(0, -30px) scale(1.5);
     opacity: 0;
   }
 }
 
 .road-and-train-scene {
   .train-animate {
-    animation: trainRightToLeft 25s linear infinite;
+    /* Start off-screen so no static train visible before animation runs */
+    transform: translateX(calc(100vw + 40%));
+    /* Faster on small screens, slower on larger (mobile-first) */
+    animation: trainRightToLeft 14s linear infinite;
 
     &.train-delay {
-      animation-delay: -12.5s; /* Half cycle: second train starts mid-journey so one is always on screen */
+      animation-delay: -5s;
+    }
+  }
+
+  /* Tablet: slightly slower */
+  @media (min-width: 768px) {
+    .train-animate {
+      animation-duration: 16s;
+      &.train-delay {
+        animation-delay: -5.75s;
+      }
+    }
+  }
+
+  /* Desktop: slower */
+  @media (min-width: 1024px) {
+    .train-animate {
+      animation-duration: 18s;
+      &.train-delay {
+        animation-delay: -6.5s;
+      }
+    }
+  }
+
+  /* Large desktop: slowest */
+  @media (min-width: 1200px) {
+    .train-animate {
+      animation-duration: 22s;
+      &.train-delay {
+        animation-delay: -8s;
+      }
     }
   }
 
   .train-smoke {
-    transform-origin: 45px 8px;
+    transform-origin: 45px 8px; /* chimney top */
     pointer-events: none;
+  }
+
+  /* On screens smaller than desktop, use shorter smoke so it doesn't get cut off */
+  @media (max-width: 1023px) {
+    .smoke-puff {
+      animation-name: smokeRiseShort;
+    }
   }
 
   /* People on train: bounce and sway (different timing per person) */

@@ -48,7 +48,8 @@ function RoadAndTrain() {
       sx={{
         width: "100%",
         position: "relative",
-        overflow: "hidden",
+        overflowX: "hidden",
+        overflowY: "visible",
         display: "block",
       }}
     >
@@ -183,12 +184,12 @@ function RoadAndTrain() {
           bottom: "46%",
           right: 0,
           zIndex: 10,
-          width: { xs: "560px", sm: "700px", md: "860px" },
+          width: { xs: "560px", sm: "700px", md: "960px", lg: "1100px" },
           height: "auto",
         }}
       >
         <svg
-          viewBox="0 -55 520 135"
+          viewBox="0 -95 520 175"
           preserveAspectRatio="xMidYMid meet"
           style={{ width: "100%", height: "auto", display: "block" }}
         >
@@ -305,12 +306,12 @@ function RoadAndTrain() {
           bottom: "46%",
           right: 0,
           zIndex: 10,
-          width: { xs: "560px", sm: "700px", md: "860px" },
+          width: { xs: "560px", sm: "700px", md: "960px", lg: "1100px" },
           height: "auto",
         }}
       >
         <svg
-          viewBox="0 -55 520 135"
+          viewBox="0 -95 520 175"
           preserveAspectRatio="xMidYMid meet"
           style={{ width: "100%", height: "auto", display: "block" }}
         >

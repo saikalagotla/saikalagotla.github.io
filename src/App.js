@@ -80,14 +80,14 @@ function getCloudPositions() {
 const cloudPositions = getCloudPositions();
 
 // Birds in the sky: half left→right (like clouds), half right→left. Flap speed matches flight speed.
-// Colors complement app palette: navy (#2F3C7E), blush (#FBEAEB), sun amber (#ffb300), train blues, grass greens.
+// Colors chosen to contrast both light background (navy/blush) and dark (night): lighter, visible on both.
 const BIRD_COLORS = [
-  "#8b6b7c", // dusty mauve (blush family)
-  "#a65d4a", // terracotta (warm, complements navy)
-  "#b8860b", // dark golden (sun palette)
-  "#4a5f7a", // slate blue (train/navy)
-  "#2a3a4e", // deep navy
-  "#5a7a65", // sage (grass family)
+  "#F5EEDC", // cream (pops on dark)
+  "#E8C547", // golden yellow (contrasts navy & night)
+  "#D4846A", // coral (warm, stands out)
+  "#7EB8A2", // mint/teal (contrasts blush & dark)
+  "#C9B8E8", // soft lavender (visible on both)
+  "#E8B4A0", // peach (warm, high contrast)
 ];
 const BIRD_COUNT = 6;
 function getBirdPositions() {
@@ -106,7 +106,7 @@ function getBirdPositions() {
       direction,
       duration,
       delay: `${delay}s`,
-      size: 24 + Math.random() * 14,
+      size: 38 + Math.random() * 22,
       flapDuration: `${flapDurationSec}s`,
       color: BIRD_COLORS[i % BIRD_COLORS.length],
     });
